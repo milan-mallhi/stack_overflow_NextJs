@@ -4,13 +4,12 @@ import { Badge } from "../ui/badge";
 
 interface Props {
   _id: string;
-  key: string;
   name: string;
   totalQuestion?: number;
   showCount?: boolean;
 }
 
-const RenderTag = ({ _id, key, name, totalQuestion, showCount }: Props) => {
+const RenderTag = ({ _id, name, totalQuestion, showCount }: Props) => {
   return (
     <Link href={`/tag/${_id}`} className=" flex justify-between gap-2">
       <Badge
