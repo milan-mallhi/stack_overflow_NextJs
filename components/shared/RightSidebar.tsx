@@ -5,24 +5,24 @@ import RenderTag from "./RenderTag";
 
 const hotQuestions = [
   {
-    _id: 1,
+    _id: "1",
     title:
       "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
   },
   {
-    _id: 2,
+    _id: "2",
     title: "Is it only me or the font is bolder than necessary?",
   },
   {
-    _id: 3,
+    _id: "3",
     title: "Can I get the course for free?",
   },
   {
-    _id: 4,
+    _id: "4",
     title: "Redux Toolkit Not Updating State as Expected",
   },
   {
-    _id: 5,
+    _id: "5",
     title:
       "Ability to grant special exceptions or access to specific courses or products.",
   },
@@ -30,27 +30,27 @@ const hotQuestions = [
 
 const PopularTags = [
   {
-    _id: 1,
+    _id: "1",
     name: "React",
     totalQuestion: 6,
   },
   {
-    _id: 2,
+    _id: "2",
     name: "Next",
     totalQuestion: 2,
   },
   {
-    _id: 1,
+    _id: "3",
     name: "Vue",
     totalQuestion: 1,
   },
   {
-    _id: 1,
+    _id: "4",
     name: "Javscript",
     totalQuestion: 5,
   },
   {
-    _id: 1,
+    _id: "5",
     name: "Shopify",
     totalQuestion: 3,
   },
