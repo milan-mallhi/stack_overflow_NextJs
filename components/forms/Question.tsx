@@ -24,7 +24,7 @@ import { createQuestion } from "@/lib/actions/question.action";
 import { useRouter, usePathname } from "next/navigation";
 
 interface Props {
-  mongoUserId: "string";
+  mongoUserId: string;
 }
 
 const Question = ({ mongoUserId }: Props) => {
