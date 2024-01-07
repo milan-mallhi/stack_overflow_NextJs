@@ -17,18 +17,50 @@ import { Editor } from "@tinymce/tinymce-react";
 import { useTheme } from "@/context/themeProvider";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { createAnswer } from "@/lib/actions/answer.action";
+import { usePathname } from "next/navigation";
 
-const handleCreateAnswer = (data) => {};
+interface Props {
+  question: string;
+  questionId: string;
+  authorId: string;
+}
 
-const Answer = () => {
+const Answer = ({ question, questionId, authorId }: Props) => {
   const form = useForm<z.infer<typeof AnswerSchema>>({
     resolver: zodResolver(AnswerSchema),
     defaultValues: { answer: "" },
   });
 
+  const pathName = usePathname();
   const editorRef = useRef(null);
   const { mode } = useTheme();
-  const [isSubmitting, setIsSubmitting] = useState();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
+    setIsSubmitting(true);
+
+    try {
+      await createAnswer({
+        content: values.answer,
+        author: JSON.parse(authorId),
+        question: JSON.parse(questionId),
+        path: pathName,
+      });
+
+      form.reset();
+
+      if (editorRef.current) {
+        const editor = editorRef.current as any;
+        editor.setContent("");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div>
       <div className=" flex flex-col justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -108,7 +140,7 @@ const Answer = () => {
 
           <div className="flex justify-end">
             <Button
-              type="button"
+              type="submit"
               className=" primary-gradient w-fit text-white"
               disabled={isSubmitting}
             >
