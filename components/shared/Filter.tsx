@@ -27,7 +27,7 @@ const Filter = ({ filters, otherClasses, containerClasses }: Props) => {
           text-dark500_light700 border px-5 py-2.5`}
         >
           <div className=" line-clamp-1 flex-1 text-left">
-            <SelectValue placeholder="Theme" />
+            <SelectValue placeholder="Select a Filter" />
           </div>
         </SelectTrigger>
 
