@@ -11,7 +11,6 @@ const LeftSidebar = () => {
   const pathname = usePathname();
   const { userId } = useAuth();
 
-  console.log("auth", useAuth);
   return (
     <section
       className=" background-light900_dark200 light-border custom-scrollbar  
