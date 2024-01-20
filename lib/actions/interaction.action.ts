@@ -22,7 +22,7 @@ export async function viewQuestion(params: ViewQuestionParams) {
         question: questionId,
       });
 
-      if (existingUser) return console.log("User has already viewed");
+      if (existingUser) return;
 
       // create interaction
 

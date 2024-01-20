@@ -4,11 +4,13 @@ import { sidebarLinks } from "@/constants";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { SignedOut } from "@clerk/nextjs";
+import { SignedOut, useAuth } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 
 const LeftSidebar = () => {
   const pathname = usePathname();
+  const { userId } = useAuth();
+
   return (
     <section
       className=" background-light900_dark200 light-border custom-scrollbar  
@@ -22,6 +24,14 @@ const LeftSidebar = () => {
             pathname === item.route;
 
           // TO DO
+
+          if (item.route === "/profile") {
+            if (userId) {
+              item.route = `${item.route}/${userId}`;
+            } else {
+              return null;
+            }
+          }
 
           return (
             <Link

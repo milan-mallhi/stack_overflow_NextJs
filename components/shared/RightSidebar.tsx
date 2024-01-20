@@ -2,61 +2,65 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
+import { getHotQuestions } from "@/lib/actions/question.action";
+import { getTopPopularTags } from "@/lib/actions/tag.action";
 
-const hotQuestions = [
-  {
-    _id: "1",
-    title:
-      "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
-  },
-  {
-    _id: "2",
-    title: "Is it only me or the font is bolder than necessary?",
-  },
-  {
-    _id: "3",
-    title: "Can I get the course for free?",
-  },
-  {
-    _id: "4",
-    title: "Redux Toolkit Not Updating State as Expected",
-  },
-  {
-    _id: "5",
-    title:
-      "Ability to grant special exceptions or access to specific courses or products.",
-  },
-];
+// const hotQuestions = [
+//   {
+//     _id: "1",
+//     title:
+//       "Best practices for data fetching in a Next.js application with Server-Side Rendering (SSR)?",
+//   },
+//   {
+//     _id: "2",
+//     title: "Is it only me or the font is bolder than necessary?",
+//   },
+//   {
+//     _id: "3",
+//     title: "Can I get the course for free?",
+//   },
+//   {
+//     _id: "4",
+//     title: "Redux Toolkit Not Updating State as Expected",
+//   },
+//   {
+//     _id: "5",
+//     title:
+//       "Ability to grant special exceptions or access to specific courses or products.",
+//   },
+// ];
 
-const PopularTags = [
-  {
-    _id: "1",
-    name: "React",
-    totalQuestion: 6,
-  },
-  {
-    _id: "2",
-    name: "Next",
-    totalQuestion: 2,
-  },
-  {
-    _id: "3",
-    name: "Vue",
-    totalQuestion: 1,
-  },
-  {
-    _id: "4",
-    name: "Javscript",
-    totalQuestion: 5,
-  },
-  {
-    _id: "5",
-    name: "Shopify",
-    totalQuestion: 3,
-  },
-];
+// const PopularTags = [
+//   {
+//     _id: "1",
+//     name: "React",
+//     totalQuestion: 6,
+//   },
+//   {
+//     _id: "2",
+//     name: "Next",
+//     totalQuestion: 2,
+//   },
+//   {
+//     _id: "3",
+//     name: "Vue",
+//     totalQuestion: 1,
+//   },
+//   {
+//     _id: "4",
+//     name: "Javscript",
+//     totalQuestion: 5,
+//   },
+//   {
+//     _id: "5",
+//     name: "Shopify",
+//     totalQuestion: 3,
+//   },
+// ];
 
-const RightSidebar = () => {
+const RightSidebar = async () => {
+  const hotQuestions = await getHotQuestions();
+  const PopularTags = await getTopPopularTags();
   return (
     <section
       className="custom-scrollbar background-light900_dark200 
@@ -95,7 +99,7 @@ const RightSidebar = () => {
               key={tag._id}
               _id={tag._id}
               name={tag.name}
-              totalQuestion={tag.totalQuestion}
+              totalQuestion={tag.numberOfQuestions}
               showCount
             />
           ))}
