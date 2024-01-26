@@ -36,6 +36,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
   const editorRef = useRef(null);
   const { mode } = useTheme();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingAi, setIsSubmittingAi] = useState(false);
 
   const handleCreateAnswer = async (values: z.infer<typeof AnswerSchema>) => {
     setIsSubmitting(true);
@@ -59,6 +60,28 @@ const Answer = ({ question, questionId, authorId }: Props) => {
     } finally {
       setIsSubmitting(false);
     }
+
+    const generateAIAnswer = async () => {
+      if (!authorId) return;
+
+      setIsSubmittingAi(true);
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/chatgpt`,
+          {
+            method: "POST",
+            body: JSON.stringify({ question }),
+          }
+        );
+        const aiAnswer = await response.json();
+
+        alert(aiAnswer.reply);
+      } catch (error) {
+      } finally {
+        setIsSubmittingAi(false);
+      }
+    };
   };
 
   return (
@@ -70,7 +93,8 @@ const Answer = ({ question, questionId, authorId }: Props) => {
         <Button
           className="btn light-border-2 gap-1.5 rounded-md px-4 py-2.5
          text-primary-500 shadow-none dark:text-primary-500"
-          onClick={() => {}}
+          // onClick={generateAIAnswer}
+          disabled
         >
           <Image
             src="/assets/icons/stars.svg"
@@ -79,7 +103,7 @@ const Answer = ({ question, questionId, authorId }: Props) => {
             height={12}
             className=" object-contain"
           />
-          Generate an AI Answer
+          Generate AI Answer (disabled)
         </Button>
       </div>
       <Form {...form}>
