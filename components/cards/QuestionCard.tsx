@@ -53,7 +53,7 @@ const QuestionCard = ({
           </Link>
         </div>
 
-        {/* If signed in add edit delete actions */}
+        {/* If signed in add edit delete  */}
 
         <SignedIn>
           {showActionButtons && (
