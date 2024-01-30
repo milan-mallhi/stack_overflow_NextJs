@@ -11,7 +11,6 @@ import { connectToDatabase } from "../mongoose";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import Interaction from "@/database/interaction.model";
-import { Tag } from "lucide-react";
 import User from "@/database/user.model";
 
 export async function createAnswer(params: CreateAnswerParams) {
