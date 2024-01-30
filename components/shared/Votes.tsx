@@ -1,6 +1,6 @@
 "use client";
 
-import { upvoteAnswer, downvoteAnswer } from "@/lib/actions/answer.action";
+import { downvoteAnswer, upvoteAnswer } from "@/lib/actions/answer.action";
 import { viewQuestion } from "@/lib/actions/interaction.action";
 import {
   downvoteQuestion,
@@ -43,14 +43,12 @@ const Votes = ({
       questionId: JSON.parse(itemId),
       path: pathname,
     });
-  };
 
-  useEffect(() => {
-    viewQuestion({
-      questionId: JSON.parse(itemId),
-      userId: userId ? JSON.parse(userId) : undefined,
+    return toast({
+      title: `Question ${!hasSaved ? "Saved in" : "Removed from"} your collection`,
+      variant: !hasSaved ? "default" : "destructive",
     });
-  }, [itemId, userId, pathname, router]);
+  };
 
   const handleVote = async (action: string) => {
     if (!userId) {
@@ -110,6 +108,13 @@ const Votes = ({
       });
     }
   };
+
+  useEffect(() => {
+    viewQuestion({
+      questionId: JSON.parse(itemId),
+      userId: userId ? JSON.parse(userId) : undefined,
+    });
+  }, [itemId, userId, pathname, router]);
 
   return (
     <div className="flex gap-5">

@@ -17,13 +17,12 @@ interface QuestionProps {
     _id: string;
     name: string;
     picture: string;
-    clerkId: string;
   };
   upvotes: string[];
   views: number;
   answers: Array<object>;
   createdAt: Date;
-  clerkId?: string | null;
+  clerkId?: string;
 }
 
 const QuestionCard = ({
@@ -53,8 +52,6 @@ const QuestionCard = ({
           </Link>
         </div>
 
-        {/* If signed in add edit delete  */}
-
         <SignedIn>
           {showActionButtons && (
             <EditDeleteAction type="Question" itemId={JSON.stringify(_id)} />
@@ -78,7 +75,6 @@ const QuestionCard = ({
           isAuthor
           textStyles="body-medium text-dark400_light700"
         />
-
         <div className="flex items-center gap-3 max-sm:flex-wrap max-sm:justify-start">
           <Metric
             imgUrl="/assets/icons/like.svg"

@@ -5,92 +5,37 @@ import NoResult from "@/components/shared/NoResult";
 import Pagination from "@/components/shared/Pagination";
 import LocalSearchbar from "@/components/shared/search/LocalSearchbar";
 import { Button } from "@/components/ui/button";
-import { HomePageFilters } from "@/constants/Filters";
-import {
-  getQuestions,
-  getRecommendedQuestions,
-} from "@/lib/actions/question.action";
+import { getQuestions } from "@/lib/actions/question.action";
 import { SearchParamsProps } from "@/types";
-import { auth } from "@clerk/nextjs";
 import Link from "next/link";
 
-// const questions = [
-//   {
-//     _id: "1",
-//     title: "Redux Toolkit Not Updating State as Expected",
-//     tags: [
-//       { _id: "tag1", name: "sql" },
-//       { _id: "tag2", name: "java" },
-//     ],
-//     author: {
-//       _id: "author1",
-//       name: "John deo",
-//       picture: "url-to-profile-picture",
-//     },
-//     upvotes: 10,
-//     views: 100,
-//     answers: [],
-//     createdAt: new Date("2023-09-01T12:00:00.000Z"),
-//   },
-//   {
-//     _id: "2",
-//     title: "Async/Await Function Not Handling Errors Properly",
-//     tags: [
-//       { _id: "tag3", name: "python" },
-//       { _id: "tag4", name: "css" },
-//     ],
-//     author: {
-//       _id: "author2",
-//       name: "John deo",
-//       picture: "url-to-profile-picture",
-//     },
-//     upvotes: 9,
-//     views: 400,
-//     answers: [],
-//     createdAt: new Date("2023-11-01T12:00:00.000Z"),
-//   },
-// ];
+import type { Metadata } from "next";
+import { HomePageFilters } from "@/constants/Filters";
+
+export const metadata: Metadata = {
+  title: "Home | Dev Overflow",
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  let result;
-
-  const { userId } = auth();
-
-  if (searchParams?.filter === "recommended") {
-    if (userId) {
-      result = await getRecommendedQuestions({
-        userId,
-        searchQuery: searchParams.q,
-        page: searchParams.page ? +searchParams.page : 1,
-      });
-    } else {
-      result = {
-        questions: [],
-        isNext: false,
-      };
-    }
-  } else {
-    result = await getQuestions({
-      searchQuery: searchParams.q,
-      filter: searchParams.filter,
-      page: searchParams.page ? +searchParams.page : 1,
-    });
-  }
-
-  // fetch recommeneded
+  const result = await getQuestions({
+    searchQuery: searchParams.q,
+    filter: searchParams.filter,
+    page: searchParams.page ? +searchParams.page : 1,
+  });
 
   return (
     <>
-      <div className=" flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className=" h1-bold text-dark100_light900">All Questions</h1>
-        <Link href="/ask-question" className=" flex justify-end max-sm:w-full">
-          <Button className=" primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
+      <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
+        <h1 className="h1-bold text-dark100_light900">All Questions</h1>
+
+        <Link href="/ask-question" className="flex justify-end max-sm:w-full">
+          <Button className="primary-gradient min-h-[46px] px-4 py-3 !text-light-900">
             Ask a Question
           </Button>
         </Link>
       </div>
 
-      <div className=" mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
+      <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
         <LocalSearchbar
           route="/"
           iconPosition="left"
@@ -98,15 +43,17 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           placeholder="Search for questions"
           otherClasses="flex-1"
         />
+
         <Filter
           filters={HomePageFilters}
           otherClasses="min-h-[56px] sm:min-w-[170px]"
           containerClasses="hidden max-md:flex"
         />
       </div>
+
       <HomeFilters />
 
-      <div className=" mt-10 flex w-full flex-col gap-6">
+      <div className="mt-10 flex w-full flex-col gap-6">
         {result.questions.length > 0 ? (
           result.questions.map((question) => (
             <QuestionCard
@@ -123,11 +70,9 @@ export default async function Home({ searchParams }: SearchParamsProps) {
           ))
         ) : (
           <NoResult
-            title="There is no question to show"
-            description="Be the first one to break the silence!🚀 Ask the question and Kickstart
-          the Discussions. Our query could be next big thing the other learn from.
-          So get involved!💡"
-            link="/"
+            title="There’s no question to show"
+            description="Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. our query could be the next big thing others learn from. Get involved! 💡"
+            link="/ask-question"
             linkTitle="Ask a Question"
           />
         )}
