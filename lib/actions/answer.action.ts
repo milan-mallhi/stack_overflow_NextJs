@@ -11,7 +11,7 @@ import { connectToDatabase } from "../mongoose";
 import Question from "@/database/question.model";
 import { revalidatePath } from "next/cache";
 import Interaction from "@/database/interaction.model";
-import { Tag } from "lucide-react";
+import User from "@/database/user.model";
 
 export async function createAnswer(params: CreateAnswerParams) {
   const { content, author, question, path } = params;
@@ -24,11 +24,21 @@ export async function createAnswer(params: CreateAnswerParams) {
 
   // Adding an Question to the answer array
 
-  await Question.findByIdAndUpdate(question, {
+  const questionObject = await Question.findByIdAndUpdate(question, {
     $push: { answers: newAnswer._id },
   });
 
   // TODO : ADD Interactions
+
+  await Interaction.create({
+    user: author,
+    action: "answer",
+    question,
+    answer: newAnswer._id,
+    tags: questionObject.tags,
+  });
+
+  await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
   revalidatePath(path);
 
@@ -44,11 +54,28 @@ export async function getAnswers(params: GetAnswersParams) {
   try {
     connectToDatabase();
 
-    const { questionId } = params;
+    const { questionId, sortBy } = params;
+
+    let sortOptions = {};
+
+    switch (sortBy) {
+      case "highestUpvotes":
+        sortOptions = { upvotes: -1 };
+        break;
+      case "lowestUpvotes":
+        sortOptions = { upvotes: 1 };
+        break;
+      case "recent":
+        sortOptions = { createdAt: -1 };
+        break;
+      case "old":
+        sortOptions = { createdAt: 1 };
+        break;
+    }
 
     const answers = await Answer.find({ question: questionId })
       .populate("author", "_id clerkID name picture")
-      .sort({ createdAt: -1 });
+      .sort(sortOptions);
 
     return { answers };
   } catch (error) {
@@ -86,6 +113,15 @@ export async function upvoteAnswer(params: AnswerVoteParams) {
 
     // Increment author's reputation
 
+    // Increment author's reputation
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasupVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasupVoted ? -10 : 10 },
+    });
+
     revalidatePath(path);
   } catch (error) {
     console.log(error);
@@ -121,6 +157,14 @@ export async function downvoteAnswer(params: AnswerVoteParams) {
     }
 
     // Increment author's reputation
+
+    await User.findByIdAndUpdate(userId, {
+      $inc: { reputation: hasdownVoted ? -2 : 2 },
+    });
+
+    await User.findByIdAndUpdate(answer.author, {
+      $inc: { reputation: hasdownVoted ? -10 : 10 },
+    });
 
     revalidatePath(path);
   } catch (error) {
